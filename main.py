@@ -1,24 +1,20 @@
-import openai
+from openai import OpenAI # Import the OpenAI client
 
-openai.api_key = 'sk-'
+# Set your API key during the instantiation of the OpenAI client
+client = OpenAI(api_key='YOUR API KEY') # Replace with your API key
+## I recommend storing your API key in a separate file and importing it here or use environment variables
+## Dont ever store your API key in a public repository
 
-def soru_cevapla(soru):
-    try:
-        # OpenAI'ya soruyu gönder
-        cevap = openai.Completion.create(
-            engine="text-davinci-003",  # GPT-4 modeli
-            prompt=soru,
-            max_tokens=150  # Cevabın maksimum uzunluğu
-        )
+completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a very skilled programmer."}, ## The first message is always from the system, explains the GPT what does its role now
+        {"role": "user", "content": "Write me a high-performance sorting algorithm in Python."}, ## The second message is always from the user, explains the GPT what does its role now
+    ],
+)
 
-        # OpenAI'den gelen cevabı al
-        cevap_metni = cevap['choices'][0]['text'].strip()
-        return cevap_metni
-    except Exception as e:
-        return str(e)
+print(completion.choices[0].message)
 
-# Soru gönder ve cevabı al
-response = soru_cevapla("What is the capital of Turkey?")
 
-# Cevabı ekrana yazdır
-print(response)
+## Now you can use the GPT-3 chatbot to chat with your users, or you can use it to generate code for you
+## Remember this is a very simple example, you can make it more complex by adding more messages, lang chains, etc.
